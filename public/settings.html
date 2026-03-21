@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🛰️</text></svg>"/>
+  <title>SPUTNIK — Settings</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <div class="header">
+    <h1>Sputnik</h1>
+    <div class="header-links">
+      <a href="/">Dashboard</a>
+      <a href="/settings">Settings</a>
+    </div>
+  </div>
+
+  <div class="settings-form">
+    <div class="settings-section">
+      <h2>Google Calendar</h2>
+      <p class="settings-hint">No API key needed. Just paste the public iCal URL from your Google Calendar.</p>
+      <p class="settings-hint">To find it: Google Calendar &rarr; Settings &rarr; your calendar &rarr; "Integrate calendar" &rarr; <strong>Public URL to this calendar</strong> (the one ending in <code>.ics</code>)</p>
+      <div class="settings-field">
+        <label for="gcal-ical-url">Public iCal URL</label>
+        <input type="text" id="gcal-ical-url" placeholder="https://calendar.google.com/calendar/ical/...@group.calendar.google.com/public/basic.ics">
+      </div>
+    </div>
+
+    <div class="settings-section">
+      <h2>Weather Location</h2>
+      <p class="settings-hint">Defaults to Omaha, NE if left blank. Uses <a href="https://open-meteo.com" target="_blank" style="color: var(--accent);">Open-Meteo</a> (free, no API key).</p>
+      <p class="settings-hint">Find coordinates: search your address on Google Maps, right-click &rarr; the lat/lng numbers are right there.</p>
+      <div class="settings-field">
+        <label for="weather-name">Location Name</label>
+        <input type="text" id="weather-name" placeholder="e.g. Omaha, NE 68134">
+      </div>
+      <div class="settings-field">
+        <label for="weather-lat">Latitude</label>
+        <input type="text" id="weather-lat" placeholder="41.2586">
+      </div>
+      <div class="settings-field">
+        <label for="weather-lon">Longitude</label>
+        <input type="text" id="weather-lon" placeholder="-96.0498">
+      </div>
+    </div>
+
+    <div class="settings-actions">
+      <button class="btn btn-save" onclick="saveSettings()">Save Settings</button>
+      <a href="/" class="btn" style="text-decoration: none; text-align: center;">Back to Dashboard</a>
+    </div>
+    <p id="settings-status" style="margin-top: 12px; font-size: 0.85rem; color: var(--green);"></p>
+  </div>
+
+  <script src="/js/settings.js"></script>
+</body>
+</html>

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>🛰️</text></svg>"/>
+  <title>SPUTNIK</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <div class="header">
+    <h1>Sputnik</h1>
+    <div class="header-links">
+      <a href="/settings">Settings</a>
+    </div>
+  </div>
+
+  <div class="grid">
+    <!-- Calendar -->
+    <div class="card">
+      <div class="card-header">Calendar</div>
+      <div class="card-body" id="calendar-widget">
+        <div class="loading">Loading calendar...</div>
+      </div>
+    </div>
+
+    <!-- Weather -->
+    <div class="card">
+      <div class="card-header">Omaha Weather</div>
+      <div class="card-body" id="weather-widget">
+        <div class="loading">Loading weather...</div>
+      </div>
+    </div>
+
+    <!-- To-Do List -->
+    <div class="card" style="grid-column: 1 / -1;">
+      <div class="card-header">To-Do List</div>
+      <div class="card-body" id="todo-widget">
+        <div class="list-input">
+          <input type="text" id="todo-input" placeholder="Add a task...">
+          <select id="todo-category">
+            <option value="Dustin">Dustin</option>
+            <option value="Darwin">Darwin</option>
+            <option value="Levi">Levi</option>
+            <option value="House">House</option>
+          </select>
+          <button class="btn" onclick="addTodo()">Add</button>
+        </div>
+        <div class="todo-columns" id="todo-columns">
+          <div class="todo-column"><div class="todo-column-header">Dustin <button class="btn btn-sm" onclick="resetDone('Dustin')" title="Reset done items">↺</button></div><div class="todo-column-body" id="todo-col-Dustin"></div></div>
+          <div class="todo-column"><div class="todo-column-header">Darwin <button class="btn btn-sm" onclick="resetDone('Darwin')" title="Reset done items">↺</button></div><div class="todo-column-body" id="todo-col-Darwin"></div></div>
+          <div class="todo-column"><div class="todo-column-header">Levi <button class="btn btn-sm" onclick="resetDone('Levi')" title="Reset done items">↺</button></div><div class="todo-column-body" id="todo-col-Levi"></div></div>
+          <div class="todo-column"><div class="todo-column-header">House <button class="btn btn-sm" onclick="resetDone('House')" title="Reset done items">↺</button></div><div class="todo-column-body" id="todo-col-House"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Grocery List -->
+    <div class="card">
+      <div class="card-header">Grocery List</div>
+      <div class="card-body" id="grocery-widget">
+        <div class="list-input">
+          <input type="text" id="grocery-input" placeholder="Add an item...">
+          <button class="btn" onclick="addGrocery()">Add</button>
+        </div>
+        <div id="grocery-list"></div>
+      </div>
+    </div>
+
+    <!-- System Status -->
+    <div class="card" style="grid-column: 1 / -1;">
+      <div class="card-header">System Status</div>
+      <div class="card-body">
+        <div class="status-grid" id="status-grid">
+          <div class="status-item" id="sys-echo"><span class="sys-dot checking"></span> ECHO Terminal</div>
+          <div class="status-item" id="sys-hestia"><span class="sys-dot checking"></span> HESTIA</div>
+          <div class="status-item" id="sys-cakes"><span class="sys-dot checking"></span> Honeybee Cakes</div>
+          <div class="status-item" id="sys-sputnik"><span class="sys-dot checking"></span> Sputnik</div>
+          <div class="status-item" id="sys-pve"><span class="sys-dot checking"></span> Proxmox (PVE)</div>
+          <div class="status-item" id="sys-claude"><span class="sys-dot checking"></span> Claude API</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- News -->
+    <div class="card" style="grid-column: 1 / -1;">
+      <div class="card-header">Current Events</div>
+      <div class="card-body">
+        <div class="news-link">
+          <a href="https://frontpage.ink" target="_blank" rel="noopener">frontpage.ink</a>
+</div>
+      </div>
+    </div>
+
+    <!-- SPUTNIK Ideas -->
+    <div class="card tron-glow" style="grid-column: 1 / -1;">
+      <div class="card-header tron-header">SPUTNIK Improvement Ideas</div>
+      <div class="card-body" id="ideas-widget">
+        <div class="list-input">
+          <input type="text" id="ideas-input" placeholder="Add an improvement idea...">
+          <button class="btn" onclick="addIdea()">Add</button>
+        </div>
+        <div id="ideas-list"></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/app.js"></script>
+</body>
+</html>
