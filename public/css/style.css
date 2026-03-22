@@ -122,10 +122,10 @@ body {
   animation: tron-sweep 8s linear infinite;
 }
 
-.card:hover {
-  animation-duration: 16s;
-  box-shadow: 0 0 24px rgba(0, 0, 0, 0.5), 0 0 24px rgba(255, 101, 0, 0.2);
-}
+/*.card:hover {*/
+/*  animation-duration: 16s;*/
+/*  box-shadow: 0 0 24px rgba(0, 0, 0, 0.5), 0 0 24px rgba(255, 101, 0, 0.2);*/
+/*}*/
 
 /* Stagger tron per card so they're not all in sync */
 .grid > .card:nth-child(1) { animation-delay: 0s; }
@@ -950,10 +950,10 @@ body {
   animation: tron-sweep 4s linear infinite;
 }
 
-.card:hover {
-  animation-duration: 2s;
-  box-shadow: 0 0 24px rgba(0, 0, 0, 0.5), 0 0 24px rgba(255, 101, 0, 0.2);
-}
+/*.card:hover {*/
+/*  animation-duration: 2s;*/
+/*  box-shadow: 0 0 24px rgba(0, 0, 0, 0.5), 0 0 24px rgba(255, 101, 0, 0.2);*/
+/*}*/
 
 /* Stagger tron per card so they're not all in sync */
 .grid > .card:nth-child(1) { animation-delay: 0s; }
