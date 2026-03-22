@@ -24,7 +24,7 @@
   --red: #ff3333;
   --orange: #ff8c00;
   --yellow: #ffe600;
-  --white: #FFFFFF;
+  --white: #ffffff;
   --radius: 4px;
 }
 
@@ -43,7 +43,7 @@ body {
   font-family: 'Courier New', 'Fira Mono', 'Consolas', monospace;
   background: var(--bg);
   color: var(--text);
-  min-height: 150vh;
+  min-height: 180vh;
   font-size: clamp(18px, 7vw, 24px);
 }
 
@@ -53,13 +53,13 @@ body {
   align-items: center;
   justify-content: space-between;
   padding: 16px 24px;
-  border-bottom: 4px solid var(--white);
+  border-bottom: 8px solid #ffffff;
   background: linear-gradient(0deg, rgba(255, 195, 0, 0.05) 0%, transparent 100%);
   box-shadow: 0 4px 20px rgba(255, 195, 0, 0.08);
 }
 
 .header h1 {
-  font-size: clamp(1.2rem, 7vw, 2rem);
+  font-size: clamp(1.2rem, 7vw, 2.4rem);
   font-weight: 700;
   letter-spacing: 4px;
   text-transform: uppercase;
@@ -70,7 +70,7 @@ body {
 .header-links a {
   color: var(--text-dim);
   text-decoration: none;
-  font-size: clamp(0.85rem, 7vw, 1.1rem);
+  font-size: clamp(0.9rem, 7vw, 1.2rem);
   margin-left: 16px;
   text-transform: uppercase;
   letter-spacing: 2px;
@@ -140,10 +140,10 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 14px 18px;
-  border-bottom: 1px solid var(--white);
+  padding: 8px 18px;
+  border-bottom: 1px solid #ffffff;
   font-weight: 800;
-  font-size: clamp(0.9rem, 7vw, 1.5rem);
+  font-size: clamp(0.9rem, 7vw, 2.2rem);
   text-transform: uppercase;
   letter-spacing: 4px;
   color: var(--neon-orange);
@@ -589,7 +589,7 @@ body {
   justify-content: center;
   gap: 8px;
   padding: 8px 10px;
-  font-size: clamp(0.75rem, 7vw, 0.9rem);
+  font-size: clamp(0.9rem, 7vw, 2rem);
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 2px;
@@ -601,7 +601,7 @@ body {
 
 .btn-sm {
   padding: 4px 6px;
-  font-size: clamp(0.7rem, 7vw, 0.85rem);
+  font-size: clamp(0.8rem, 7vw, 0.9rem);
   border: 2px solid var(--text-dim);
   color: var(--text-dim);
   background: transparent;
@@ -623,7 +623,7 @@ body {
 }
 
 .todo-column-body .list-item {
-  font-size: clamp(0.85rem, 7vw, 1.1rem);
+  font-size: clamp(0.9rem, 7vw, 1.5rem);
 }
 
 @media (max-width: 900px) {
