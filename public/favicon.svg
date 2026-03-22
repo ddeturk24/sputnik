@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <rect width="32" height="32" fill="#000814"/>
+  <!-- solar panel left -->
+  <rect x="2" y="13" width="9" height="6" rx="1" fill="#003566" stroke="#FFC300" stroke-width="0.8"/>
+  <line x1="5.5" y1="13" x2="5.5" y2="19" stroke="#FFC300" stroke-width="0.4"/>
+  <line x1="8" y1="13" x2="8" y2="19" stroke="#FFC300" stroke-width="0.4"/>
+  <!-- satellite body -->
+  <rect x="12" y="11" width="8" height="10" rx="1" fill="#FFC300"/>
+  <rect x="13.5" y="12.5" width="5" height="7" rx="0.5" fill="#001D3D"/>
+  <!-- solar panel right -->
+  <rect x="21" y="13" width="9" height="6" rx="1" fill="#003566" stroke="#FFC300" stroke-width="0.8"/>
+  <line x1="24" y1="13" x2="24" y2="19" stroke="#FFC300" stroke-width="0.4"/>
+  <line x1="26.5" y1="13" x2="26.5" y2="19" stroke="#FFC300" stroke-width="0.4"/>
+  <!-- antenna -->
+  <line x1="16" y1="11" x2="16" y2="5" stroke="#ff6500" stroke-width="1.5"/>
+  <circle cx="16" cy="4" r="2" fill="none" stroke="#ff6500" stroke-width="1"/>
+  <circle cx="16" cy="4" r="0.8" fill="#ff6500"/>
+</svg>

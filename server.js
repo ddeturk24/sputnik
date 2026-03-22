@@ -1,6 +1,8 @@
 const express = require("express");
 const fs = require("fs");
 const path = require("path");
+const http = require("http");
+const https = require("https");
 
 const app = express();
 const PORT = process.env.SPUTNIK_PORT || 3080;
@@ -25,7 +27,7 @@ app.use((req, res, next) => {
 });
 
 app.use(express.static(path.join(__dirname, "public"), {
-  maxAge: "1h",
+  maxAge: 0,
   etag: true,
   lastModified: true
 }));
@@ -184,6 +186,7 @@ app.get("/api/calendar", async (req, res) => {
   if (!icalUrl.startsWith("https://calendar.google.com/")) {
     return res.json({ error: "Invalid calendar URL", events: [] });
   }
+  const days = Math.min(30, Math.max(1, parseInt(req.query.days) || 7));
   try {
     const resp = await fetch(icalUrl);
     if (!resp.ok) {
@@ -191,7 +194,7 @@ app.get("/api/calendar", async (req, res) => {
       return res.json({ error: "Google returned " + resp.status, events: [] });
     }
     const text = await resp.text();
-    const events = parseICal(text);
+    const events = parseICal(text, days);
     res.json({ error: null, events });
   } catch (e) {
     console.error("Calendar fetch error:", e.message);
@@ -199,11 +202,12 @@ app.get("/api/calendar", async (req, res) => {
   }
 });
 
-function parseICal(text) {
+function parseICal(text, days) {
   const events = [];
   const now = new Date();
-  const endOfDay = new Date();
-  endOfDay.setHours(23, 59, 59, 999);
+  const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const endWindow = new Date(startOfToday.getTime() + days * 86400000);
+  endWindow.setHours(23, 59, 59, 999);
   const blocks = text.split("BEGIN:VEVENT");
   for (let i = 1; i < blocks.length; i++) {
     const block = blocks[i].split("END:VEVENT")[0];
@@ -216,18 +220,22 @@ function parseICal(text) {
     const dtstart = get("DTSTART");
     if (!dtstart) continue;
     const start = parseICalDate(dtstart);
-    if (!start || start > endOfDay || start < new Date(now.getTime() - 86400000)) continue;
+    if (!start || start >= endWindow || start < startOfToday) continue;
     const dtend = get("DTEND");
     const end = dtend ? parseICalDate(dtend) : null;
-    const allDay = dtstart.length === 8;
-    events.push({ summary, start: allDay ? null : start.toISOString(), end: end ? end.toISOString() : null, allDay });
+    const allDay = dtstart.replace(/[^0-9TZ]/g, "").length === 8;
+    const date = start.getFullYear() + "-" +
+      String(start.getMonth() + 1).padStart(2, "0") + "-" +
+      String(start.getDate()).padStart(2, "0");
+    events.push({ summary, start: allDay ? null : start.toISOString(), end: end ? end.toISOString() : null, allDay, date });
   }
   events.sort((a, b) => {
+    if (a.date !== b.date) return a.date < b.date ? -1 : 1;
     if (a.allDay && !b.allDay) return -1;
     if (!a.allDay && b.allDay) return 1;
     return new Date(a.start || 0) - new Date(b.start || 0);
   });
-  return events.slice(0, 15);
+  return events.slice(0, 100);
 }
 
 function parseICalDate(str) {
@@ -244,6 +252,62 @@ function parseICalDate(str) {
   }
   return null;
 }
+
+// --- Status API ---
+const STATUS_CHECKS = [
+  { id: "echo",   label: "ECHO Terminal",  url: "http://192.168.12.211:8000/" },
+  { id: "hestia", label: "HESTIA",         url: "http://192.168.12.211:8000/api/styx/v3/health" },
+  { id: "cakes",  label: "Honeybee Cakes", url: "http://192.168.12.240:4322/", insecure: false },
+  { id: "sputnik",label: "Sputnik",        url: "http://localhost:3080/" },
+  { id: "pve",    label: "Proxmox (PVE)",  url: "https://192.168.12.70:8006/", insecure: true },
+  { id: "claude", label: "Claude API",     url: "https://api.anthropic.com/" },
+];
+
+let statusCache = null;
+let statusCacheTime = 0;
+const STATUS_CACHE_TTL = 30000;
+
+function checkService(svc) {
+  return new Promise((resolve) => {
+    const start = Date.now();
+    let u;
+    try { u = new URL(svc.url); } catch {
+      return resolve({ id: svc.id, label: svc.label, status: "down", ms: 0 });
+    }
+    const mod = u.protocol === "https:" ? https : http;
+    const options = {
+      hostname: u.hostname,
+      port: u.port || (u.protocol === "https:" ? 443 : 80),
+      path: u.pathname || "/",
+      method: "HEAD",
+      timeout: 4000,
+    };
+    if (svc.insecure) options.rejectUnauthorized = false;
+    const req = mod.request(options, (res) => {
+      req.destroy();
+      resolve({ id: svc.id, label: svc.label, status: "up", ms: Date.now() - start });
+    });
+    req.on("timeout", () => {
+      req.destroy();
+      resolve({ id: svc.id, label: svc.label, status: "down", ms: 4000 });
+    });
+    req.on("error", () => {
+      resolve({ id: svc.id, label: svc.label, status: "down", ms: Date.now() - start });
+    });
+    req.end();
+  });
+}
+
+app.get("/api/status", async (req, res) => {
+  const now = Date.now();
+  if (statusCache && (now - statusCacheTime) < STATUS_CACHE_TTL) {
+    return res.json(statusCache);
+  }
+  const results = await Promise.all(STATUS_CHECKS.map(checkService));
+  statusCache = results;
+  statusCacheTime = now;
+  res.json(results);
+});
 
 // --- SPA routes ---
 app.get("/settings", (req, res) => {
