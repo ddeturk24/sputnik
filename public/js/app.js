@@ -10,7 +10,7 @@ const CATEGORIES = ['Dustin', 'Darwin', 'Levi', 'House'];
 
 async function init() {
   settings = await api('GET', '/api/settings');
-  await Promise.all([loadTodos(), loadGrocery(), loadIdeas(), loadWeather(), loadCalendar(), loadStatus(false)]);
+  await Promise.all([loadTodos(), loadGrocery(), loadIdeas(), loadWeather(), loadCalendar(), loadStatus(false), loadFrontpage(), loadSteamWishlist()]);
   updateRefreshTime();
 }
 
@@ -229,21 +229,7 @@ function renderCalendar() {
 
   const icalUrl = settings.google_calendar && settings.google_calendar.ical_url;
 
-  // Urgent todos: !! prefix, not done — pinned at top
-  const urgentTodos = todos.filter(function(t) { return t.text.startsWith('!!') && !t.done; });
-
-  let urgentHtml = '';
-  if (urgentTodos.length > 0) {
-    urgentHtml = '<div class="cal-urgent-header">!! Priority</div>' +
-      urgentTodos.map(function(t) {
-        return '<div class="cal-event cal-urgent">' +
-          '<span class="cal-time">!!</span>' +
-          '<span class="cal-title">' + esc(t.text.replace(/^!!/, '').trim()) + '</span>' +
-          '</div>';
-      }).join('');
-  }
-
-  if (!icalUrl && urgentTodos.length === 0) {
+  if (!icalUrl) {
     el.innerHTML = '<div class="empty-state">Configure Google Calendar in <a href="/sputnik/settings" style="color: var(--accent);">Settings</a></div>';
     return;
   }
@@ -251,7 +237,6 @@ function renderCalendar() {
   const events = calendarEvents || [];
   let eventsHtml = '';
   if (events.length > 0) {
-    // Group by date
     const byDate = {};
     for (const ev of events) {
       const key = ev.date || (ev.start ? ev.start.slice(0, 10) : 'unknown');
@@ -273,11 +258,11 @@ function renderCalendar() {
       }).join('');
       return '<div class="cal-day-header">' + dayLabel + '</div>' + evHtml;
     }).join('');
-  } else if (urgentTodos.length === 0) {
+  } else {
     eventsHtml = '<div class="cal-no-events">No events in the next ' + calendarDays + ' days</div>';
   }
 
-  el.innerHTML = urgentHtml + eventsHtml;
+  el.innerHTML = eventsHtml;
 }
 
 // --- System Status ---
@@ -355,6 +340,84 @@ function updateRefreshTime() {
   if (!el) return;
   const now = new Date();
   el.textContent = 'Last refresh: ' + now.toLocaleTimeString('en-US', {hour:'numeric', minute:'2-digit', hour12:true});
+}
+
+// --- Frontpage.ink ---
+async function loadFrontpage() {
+  const el = document.getElementById('frontpage-widget');
+  if (!el) return;
+  try {
+    const data = await api('GET', '/api/frontpage');
+    if (!data || !data.items || data.items.length === 0) {
+      el.innerHTML = '<div class="empty-state">No headlines available</div>';
+      return;
+    }
+    el.innerHTML = '<div class="frontpage-list">' +
+      data.items.map(function(item) {
+        const ago = timeAgo(item.date);
+        return '<div class="frontpage-item">' +
+          '<a href="' + item.url + '" target="_blank" rel="noopener" class="frontpage-title">' + esc(item.title) + '</a>' +
+          '<span class="frontpage-meta">' + ago + (item.sources ? ' &middot; ' + esc(item.sources) : '') + '</span>' +
+          '</div>';
+      }).join('') +
+      '</div>';
+    const ticker = document.getElementById('ticker-track');
+    if (ticker) {
+      ticker.innerHTML = data.items.map(function(item) {
+        return '<span class="ticker-item"><a href="' + item.url + '" target="_blank" rel="noopener">' + esc(item.title) + '</a></span>';
+      }).join('<span class="ticker-item" style="color:#555;">&#9679;</span>');
+    }
+  } catch (e) {
+    el.innerHTML = '<div class="empty-state">Headlines unavailable</div>';
+  }
+}
+
+function timeAgo(dateStr) {
+  if (!dateStr) return '';
+  const diff = Date.now() - new Date(dateStr).getTime();
+  const h = Math.floor(diff / 3600000);
+  const m = Math.floor(diff / 60000);
+  if (m < 60) return m + 'm ago';
+  if (h < 24) return h + 'h ago';
+  return Math.floor(h / 24) + 'd ago';
+}
+
+// --- Steam Wishlist ---
+async function loadSteamWishlist() {
+  const el = document.getElementById('steam-wishlist-widget');
+  if (!el) return;
+  try {
+    const data = await api('GET', '/api/steam-wishlist');
+    if (!data) { el.innerHTML = '<div class="empty-state">Wishlist unavailable</div>'; return; }
+    if (data.error === 'no_key') {
+      el.innerHTML = '<div class="empty-state">Add <code>steam.api_key</code> to settings to enable wishlist</div>';
+      return;
+    }
+    if (data.error) {
+      el.innerHTML = '<div class="empty-state">' + esc(data.error) + '</div>';
+      return;
+    }
+    const byPrice = data.byPrice || [];
+    const byDiscount = data.byDiscount || [];
+    if (byPrice.length === 0 && byDiscount.length === 0) {
+      el.innerHTML = '<div class="empty-state">No discounted items found</div>';
+      return;
+    }
+    function gameRow(g) {
+      const disc = g.discount > 0 ? '<span class="steam-discount">-' + g.discount + '%</span>' : '';
+      return '<div class="steam-item">' +
+        '<a href="' + g.url + '" target="_blank" rel="noopener" class="steam-name">' + esc(g.name) + '</a>' +
+        '<span class="steam-price">' + disc + esc(g.price_formatted) + '</span>' +
+        '</div>';
+    }
+    let html = '<div class="steam-cols">';
+    html += '<div class="steam-col"><div class="steam-col-header">Cheapest</div>' + (byPrice.length ? byPrice.map(gameRow).join('') : '<div class="empty-state">\u2014</div>') + '</div>';
+    html += '<div class="steam-col"><div class="steam-col-header">Best Deal</div>' + (byDiscount.length ? byDiscount.map(gameRow).join('') : '<div class="empty-state">\u2014</div>') + '</div>';
+    html += '</div>';
+    el.innerHTML = html;
+  } catch (e) {
+    el.innerHTML = '<div class="empty-state">Wishlist unavailable</div>';
+  }
 }
 
 // --- Boot ---

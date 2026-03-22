@@ -396,38 +396,38 @@ body {
 /* --- Urgent items (!!) --- */
 .list-item.urgent .item-text {
   font-weight: 700;
-  color: var(--neon-orange);
-  text-shadow: 0 0 6px rgba(255, 101, 0, 0.4);
+  color: #ffd60a;
+  text-shadow: 0 0 6px rgba(255, 214, 10, 0.4);
 }
 
 .cal-urgent-header {
   font-size: clamp(0.7rem, 0.85vw, 0.8rem);
   text-transform: uppercase;
   letter-spacing: 2px;
-  color: rgba(255, 101, 0, 0.7);
+  color: rgba(255, 214, 10, 0.7);
   padding: 2px 0 8px 0;
-  border-bottom: 1px solid rgba(255, 101, 0, 0.25);
+  border-bottom: 1px solid rgba(255, 214, 10, 0.25);
   margin-bottom: 4px;
 }
 
 .cal-event.cal-urgent {
-  background: rgba(255, 101, 0, 0.07);
+  background: rgba(255, 214, 10, 0.07);
   border-radius: var(--radius);
-  border-bottom: 1px solid rgba(255, 101, 0, 0.2) !important;
+  border-bottom: 1px solid rgba(255, 214, 10, 0.2) !important;
   padding: 8px 8px !important;
   margin-bottom: 2px;
 }
 
 .cal-event.cal-urgent .cal-time {
-  color: var(--neon-orange) !important;
+  color: #ffd60a !important;
   font-weight: 700;
   min-width: 28px !important;
 }
 
 .cal-event.cal-urgent .cal-title {
   font-weight: 700;
-  color: var(--neon-orange);
-  text-shadow: 0 0 6px rgba(255, 101, 0, 0.3);
+  color: #ffd60a;
+  text-shadow: 0 0 6px rgba(255, 214, 10, 0.3);
 }
 
 /* --- News --- */
@@ -694,4 +694,145 @@ body {
 
 .status-ms-down {
   color: var(--red);
+}
+
+/* --- Frontpage.ink --- */
+.frontpage-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.frontpage-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+
+.frontpage-item:last-child {
+  border-bottom: none;
+}
+
+.frontpage-title {
+  color: var(--text);
+  text-decoration: none;
+  font-size: clamp(0.85rem, 1.1vw, 1rem);
+  line-height: 1.3;
+}
+
+.frontpage-title:hover {
+  color: var(--accent);
+}
+
+.frontpage-meta {
+  font-size: clamp(0.7rem, 0.8vw, 0.75rem);
+  color: var(--text-dim);
+}
+
+/* --- Steam Wishlist --- */
+.steam-cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+.steam-col-header {
+  font-size: clamp(0.7rem, 0.85vw, 0.8rem);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--text-dim);
+  padding-bottom: 8px;
+  margin-bottom: 4px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.steam-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 7px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+
+.steam-item:last-child {
+  border-bottom: none;
+}
+
+.steam-name {
+  color: var(--text);
+  text-decoration: none;
+  font-size: clamp(0.8rem, 1vw, 0.9rem);
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.steam-name:hover {
+  color: var(--accent);
+}
+
+.steam-price {
+  font-size: clamp(0.8rem, 0.95vw, 0.85rem);
+  color: var(--green);
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.steam-discount {
+  background: rgba(57, 255, 20, 0.15);
+  color: var(--green);
+  border-radius: 4px;
+  padding: 1px 5px;
+  font-size: 0.75em;
+  font-weight: 700;
+}
+
+@media (max-width: 600px) {
+  .steam-cols {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* News Ticker */
+#news-ticker {
+  width: 100%;
+  overflow: hidden;
+  background: #111;
+  border-top: 1px solid #222;
+  border-bottom: 1px solid #222;
+  padding: 6px 0;
+  white-space: nowrap;
+}
+
+.ticker-track {
+  display: inline-block;
+  animation: ticker-scroll 60s linear infinite;
+}
+
+.ticker-track .ticker-item {
+  display: inline-block;
+  padding: 0 40px;
+  font-size: 0.85em;
+  color: #ccc;
+}
+
+.ticker-track .ticker-item a {
+  color: #f0c040;
+  text-decoration: none;
+}
+
+.ticker-track .ticker-item a:hover {
+  text-decoration: underline;
+}
+
+@keyframes ticker-scroll {
+  0%   { transform: translateX(100vw); }
+  100% { transform: translateX(-100%); }
 }
