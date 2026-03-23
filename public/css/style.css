@@ -119,7 +119,7 @@ body {
   flex-direction: column;
   overflow: hidden;
   box-shadow: 0 0 18px rgba(0, 0, 0, 0.5), 0 0 10px rgba(255, 101, 0, 0.08);
-  animation: tron-sweep 8s linear infinite;
+  animation: tron-sweep 36s linear infinite;
 }
 
 /*.card:hover {*/
@@ -146,7 +146,7 @@ body {
   font-size: clamp(0.9rem, 7vw, 2.2rem);
   text-transform: uppercase;
   letter-spacing: 4px;
-  color: var(--neon-orange);
+  color: var(--accent);
   background: linear-gradient(0deg, rgba(255, 101, 0, 0.08) 0%, transparent 100%);
   overflow: hidden;
 }
@@ -830,12 +830,13 @@ body {
 .ticker-track .ticker-item {
   display: inline-block;
   padding: 0 40px;
-  font-size: 0.85em;
+  font-weight: 600;
+  font-size: 1em;
   color: #ccc;
 }
 
 .ticker-track .ticker-item a {
-  color: #f0c040;
+  color: var(--neon-orange);
   text-decoration: none;
 }
 
@@ -916,8 +917,8 @@ body {
   grid-template-columns: 1fr 1fr;
   grid-template-rows: auto auto;
   gap: 16px;
-  #padding: 24px;
-  max-width: 1400px;
+  padding: 0px;
+  max-width: 1600px;
   margin: 0 auto;
 }
 
