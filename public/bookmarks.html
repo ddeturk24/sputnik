@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SPUTNIK &#150; Bookmarks</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <div class="header">
+    <h1>Bookmarks</h1>
+    <div class="header-links">
+      <a href="/">Dashboard</a>
+      <a href="/settings">Settings</a>
+    </div>
+  </div>
+
+  <div class="bookmarks-page">
+    <div class="bookmarks-controls">
+      <input type="text" id="bm-search" placeholder="Search bookmarks..." oninput="filterBookmarks(this.value)">
+      <button class="btn" onclick="showAddForm()">+ Add</button>
+    </div>
+
+    <div id="bm-add-form" style="display:none; background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 16px; margin-bottom: 16px;">
+      <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+        <input type="text" id="bm-new-title" placeholder="Title" style="flex: 1; min-width: 120px; background: var(--bg); border: 1px solid var(--border); border-radius: 4px; padding: 8px; color: var(--text); font-family: inherit; font-size: 0.9rem; outline: none;">
+        <input type="text" id="bm-new-url" placeholder="https://..." style="flex: 2; min-width: 200px; background: var(--bg); border: 1px solid var(--border); border-radius: 4px; padding: 8px; color: var(--text); font-family: inherit; font-size: 0.9rem; outline: none;">
+        <input type="text" id="bm-new-cat" placeholder="Category" style="flex: 1; min-width: 100px; background: var(--bg); border: 1px solid var(--border); border-radius: 4px; padding: 8px; color: var(--text); font-family: inherit; font-size: 0.9rem; outline: none;">
+        <button class="btn btn-save" onclick="addBookmark()">Save</button>
+        <button class="btn" onclick="hideAddForm()" style="border-color: var(--text-dim); color: var(--text-dim);">Cancel</button>
+      </div>
+    </div>
+
+    <div id="bm-container">
+      <div class="loading">Loading bookmarks...</div>
+    </div>
+  </div>
+
+  <script src="/js/bookmarks.js"></script>
+</body>
+</html>
